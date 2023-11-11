@@ -3,20 +3,23 @@ import Foundation
 class PluginManagerScanner {
 	// property fields
 	private var csvFileName: String
-	var plugins: [Triplet<String>] {
-		return _plugins
-	}
+	private var plugins: [Triplet<String>]
+	private var demoData: PluginManagerDemoData
 	private var utils: PluginManagerScannerUtils
-	private var _plugins: [Triplet<String>]
 	
 	init() {
+		csvFileName = ""
+		plugins = []
+		demoData = PluginManagerDemoData()
 		utils = PluginManagerScannerUtils()
-		_plugins = []
-		self.csvFileName = ""
+	}
+
+	func getPlugins() -> [Triplet<String>] {
+		return plugins
 	}
 
 	func getCsvFileName() -> String {
-		return self.csvFileName
+		return csvFileName
 	}
 	
 	func processPlugins(pluginType: String) {
@@ -24,16 +27,16 @@ class PluginManagerScanner {
 		var pluginType = ensureDefaultIfEmpty(pluginType: pluginType, defaultType: "CLAP")
 		// check for DEMO plugin type
 		if pluginType == "DEMO" {
-			_plugins = PluginManagerDemoData.getDemoData()
+			plugins = demoData.getDemoData()
 		} else {
 			// use upper case for plugin folder
 			let pluginFolder = "/Library/Audio/Plug-Ins" + "/" + pluginType + "/"
 			// then switch to lower case
 			pluginType = pluginType.lowercased()
 			// build list of plugin triplets
-			_plugins = buildPluginTriplets(pluginType: pluginType, pluginFolder: pluginFolder)
+			plugins = buildPluginTriplets(pluginType: pluginType, pluginFolder: pluginFolder)
 			// Sort the plugin triplets
-			utils.sortPluginTripletsByManufacturerAndPlugin(plugins)
+			utils.sortPluginTripletsByManufacturerAndPlugin(plugins: [Triplet<String>])
 			// Print the plugins to the console
 			printPluginsToConsole(plugins: _plugins)
 		}

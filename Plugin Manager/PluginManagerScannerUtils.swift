@@ -1,26 +1,14 @@
 class PluginManagerScannerUtils {
 
-	func sortPluginTripletsByManufacturerAndPlugin(plugins: Array<Triplet<String>>) {
-		var pluginsMut = plugins
-		pluginsMut.sort { (a: Triplet<String>, b: Triplet<String>) in
-			if a.part0 < b.part0() {
-				return -1
-			}
-			if a.part0() > b.part0() {
-				return 1
-			}
-			if a.part2() < b.part2() {
-				return -1
-			}
-			if a.part2() > b.part2() {
-				return 1
-			}
-			return 0
+	func sortPluginTripletsByManufacturerAndPlugin(plugins:consuming [Triplet<String>]) -> [Triplet<String>] {
+		plugins.sort {
+		 ($0.p0, $0.p2) < ($1.p0, $1.p2)
 		}
+		return plugins
 	}
 	
-	func createManufacturer(ident: String, plugin: String, pluginType: Array<Triplet<String>>) {
-		let map = self.getReplacementsMap(plugin, pluginType);
+	func createManufacturer(ident: String, plugin: String, pluginType: [Triplet<String>] {
+		let map = getReplacementsMap(plugin, pluginType);
 		var manufacturer = ident;
 		for (key, value) in map {
 			manufacturer = manufacturer.replacingOccurrences(of: key, with: value, options: .regularExpression, range: nil)
