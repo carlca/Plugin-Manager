@@ -1,4 +1,0 @@
-module Plugin_Manager {
-    header "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin-Manager-Swift.h"
-    requires objc
-}
