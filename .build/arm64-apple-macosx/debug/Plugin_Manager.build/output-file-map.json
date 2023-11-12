@@ -1,0 +1,11 @@
+{
+  "": {
+    "swift-dependencies": "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/master.swiftdeps"
+  },
+  "/Users/carlcaulkett/Code/Swift/Plugin-Manager/Sources/Plugin-Manager/Plugin_Manager.swift": {
+    "dependencies": "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin_Manager.d",
+    "object": "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin_Manager.swift.o",
+    "swiftmodule": "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin_Manager~partial.swiftmodule",
+    "swift-dependencies": "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin_Manager.swiftdeps"
+  }
+}

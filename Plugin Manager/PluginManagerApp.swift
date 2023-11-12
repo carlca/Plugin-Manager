@@ -7,11 +7,28 @@
 
 import SwiftUI
 
+//@main
+//	init() {
+//		var scanner = PluginManagerScanner()
+//		scanner.processPlugins(pluginType: "CLAP")
+//	}
+//
 @main
-struct Plugin_ManagerApp: App {
-	var body: some Scene {
-		WindowGroup {
-			ContentView()
+struct SwiftTestApp: App {
+		var body: some Scene {
+				WindowGroup {
+						ContentView()
+				}
 		}
+}
+
+#Preview {
+	ContentView()
+}
+
+var body: some Scene {
+	WindowGroup {
+		ContentView()
 	}
 }
+

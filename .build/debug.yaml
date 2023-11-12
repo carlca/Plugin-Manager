@@ -1,0 +1,80 @@
+client:
+  name: basic
+tools: {}
+targets:
+  "PackageStructure": ["<PackageStructure>"]
+  "Plugin-Manager-debug.module": ["<Plugin-Manager-debug.module>"]
+  "Plugin-ManagerPackageTests-debug.test": ["<Plugin-ManagerPackageTests-debug.test>"]
+  "Plugin-ManagerTests-debug.module": ["<Plugin-ManagerTests-debug.module>"]
+  "main": ["<Plugin-Manager-debug.module>"]
+  "test": ["<Plugin-Manager-debug.module>","<Plugin-ManagerPackageTests-debug.test>","<Plugin-ManagerTests-debug.module>"]
+default: "main"
+nodes:
+  "/Users/carlcaulkett/Code/Swift/Plugin-Manager/Sources/Plugin-Manager/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/carlcaulkett/Code/Swift/Plugin-Manager/Tests/Plugin-ManagerTests/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+commands:
+  "<Plugin-Manager-debug.module>":
+    tool: phony
+    inputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin_Manager.swift.o","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.swiftmodule"]
+    outputs: ["<Plugin-Manager-debug.module>"]
+
+  "<Plugin-ManagerPackageTests-debug.test>":
+    tool: phony
+    inputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin-ManagerPackageTests.xctest/Contents/MacOS/Plugin-ManagerPackageTests"]
+    outputs: ["<Plugin-ManagerPackageTests-debug.test>"]
+
+  "<Plugin-ManagerTests-debug.module>":
+    tool: phony
+    inputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_ManagerTests.build/Plugin_ManagerTests.swift.o","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_ManagerTests.swiftmodule"]
+    outputs: ["<Plugin-ManagerTests-debug.module>"]
+
+  "C.Plugin-Manager-debug.module":
+    tool: swift-compiler
+    inputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/Sources/Plugin-Manager/Plugin_Manager.swift"]
+    outputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin_Manager.swift.o","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.swiftmodule"]
+    executable: "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    module-name: "Plugin_Manager"
+    module-output-path: "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.swiftmodule"
+    import-paths: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug"]
+    temps-path: "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build"
+    objects: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin_Manager.swift.o"]
+    other-args: ["-target","arm64-apple-macosx10.13","-swift-version","5","-enable-batch-mode","-index-store-path","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-g","-j8","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-emit-objc-header","-emit-objc-header-path","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin-Manager-Swift.h","-color-diagnostics","-sdk","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk","-F","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-Xcc","-isysroot","-Xcc","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-package-name","plugin_manager"]
+    sources: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/Sources/Plugin-Manager/Plugin_Manager.swift"]
+    is-library: true
+    enable-whole-module-optimization: false
+    num-threads: 8
+
+  "C.Plugin-ManagerPackageTests-debug.test":
+    tool: shell
+    inputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.build/Plugin_Manager.swift.o","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_ManagerTests.build/Plugin_ManagerTests.swift.o"]
+    outputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin-ManagerPackageTests.xctest/Contents/MacOS/Plugin-ManagerPackageTests"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/Plugin-ManagerPackageTests.xctest/Contents/MacOS/Plugin-ManagerPackageTests"
+    args: ["/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug","-o","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin-ManagerPackageTests.xctest/Contents/MacOS/Plugin-ManagerPackageTests","-module-name","Plugin_ManagerPackageTests","-Xlinker","-bundle","-Xlinker","-rpath","-Xlinker","@loader_path/../../../","@/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin-ManagerPackageTests.product/Objects.LinkFileList","-target","arm64-apple-macosx13.0","-Xlinker","-add_ast_path","-Xlinker","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.swiftmodule","-Xlinker","-add_ast_path","-Xlinker","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_ManagerTests.swiftmodule","-sdk","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk","-F","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib"]
+
+  "C.Plugin-ManagerTests-debug.module":
+    tool: swift-compiler
+    inputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/Tests/Plugin-ManagerTests/Plugin_ManagerTests.swift","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_Manager.swiftmodule"]
+    outputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_ManagerTests.build/Plugin_ManagerTests.swift.o","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_ManagerTests.swiftmodule"]
+    executable: "/Applications/Xcode-beta.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
+    module-name: "Plugin_ManagerTests"
+    module-output-path: "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_ManagerTests.swiftmodule"
+    import-paths: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug"]
+    temps-path: "/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_ManagerTests.build"
+    objects: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/Plugin_ManagerTests.build/Plugin_ManagerTests.swift.o"]
+    other-args: ["-target","arm64-apple-macosx13.0","-swift-version","5","-enable-batch-mode","-index-store-path","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-g","-j8","-DSWIFT_PACKAGE","-DDEBUG","-module-cache-path","/Users/carlcaulkett/Code/Swift/Plugin-Manager/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-parse-as-library","-color-diagnostics","-sdk","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk","-F","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-I","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-Xcc","-isysroot","-Xcc","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX14.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode-beta.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-fPIC","-package-name","plugin_manager"]
+    sources: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/Tests/Plugin-ManagerTests/Plugin_ManagerTests.swift"]
+    is-library: true
+    enable-whole-module-optimization: false
+    num-threads: 8
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/carlcaulkett/Code/Swift/Plugin-Manager/Sources/Plugin-Manager/","/Users/carlcaulkett/Code/Swift/Plugin-Manager/Tests/Plugin-ManagerTests/","/Users/carlcaulkett/Code/Swift/Plugin-Manager/Package.swift","/Users/carlcaulkett/Code/Swift/Plugin-Manager/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

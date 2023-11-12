@@ -1,11 +1,10 @@
 class PluginManagerScannerUtils {
 
-	func sortPluginTripletsByManufacturerAndPlugin(plugins:consuming [Triplet<String>]) -> [Triplet<String>] {
-		var mutPlugins = plugins
+	func sortPluginTripletsByManufacturerAndPlugin(plugins: inout [Triplet<String>]) -> [Triplet<String>] {
 		plugins.sort {
 		  ($0.p0, $0.p2) < ($1.p0, $1.p2)
 		}
-		return mutPlugins
+		return plugins
 	}
 	
 	func createManufacturer(ident: String, plugin: String, pluginType: String) -> String {
@@ -103,7 +102,7 @@ class PluginManagerScannerUtils {
 		return manufacturer
 	}
 	
-	func stripLastCharacter(manufacturer: String) -> String {
+	func stripLastCharacter(manufacturer: inout String) -> String {
 		if (manufacturer.isEmpty) {
 			return manufacturer;
 		}

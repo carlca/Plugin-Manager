@@ -36,7 +36,7 @@ class PluginManagerScanner {
 			// build list of plugin triplets
 			plugins = buildPluginTriplets(pluginType: pluginType, pluginFolder: pluginFolder)
 			// Sort the plugin triplets
-			plugins = utils.sortPluginTripletsByManufacturerAndPlugin(plugins: plugins)
+			plugins = utils.sortPluginTripletsByManufacturerAndPlugin(plugins: &plugins)
 			// Print the plugins to the console
 			printPluginsToConsole(plugins: plugins)
 		}

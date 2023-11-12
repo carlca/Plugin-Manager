@@ -40,8 +40,8 @@ struct ContentView: View {
                     Text("Tree Data 3")
                 })
             }
-            //.listStyle(InsetGroupedListStyle())
-            
+//            .listStyle(InsetGroupedListStyle())
+						.listStyle(SidebarListStyle())
             Spacer()
         }
     }
