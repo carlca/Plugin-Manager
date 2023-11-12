@@ -1,31 +1,41 @@
 class PluginManagerScannerUtils {
 
 	func sortPluginTripletsByManufacturerAndPlugin(plugins:consuming [Triplet<String>]) -> [Triplet<String>] {
+		var mutPlugins = plugins
 		plugins.sort {
-		 ($0.p0, $0.p2) < ($1.p0, $1.p2)
+		  ($0.p0, $0.p2) < ($1.p0, $1.p2)
 		}
-		return plugins
+		return mutPlugins
 	}
 	
-	func createManufacturer(ident: String, plugin: String, pluginType: [Triplet<String>] {
-		let map = getReplacementsMap(plugin, pluginType);
+	func createManufacturer(ident: String, plugin: String, pluginType: String) -> String {
+		let map = getReplacementsMap(plugin: plugin, pluginType: pluginType);
 		var manufacturer = ident;
 		for (key, value) in map {
 			manufacturer = manufacturer.replacingOccurrences(of: key, with: value, options: .regularExpression, range: nil)
 		}
-		manufacturer = self.stripLastCharacter(manufacturer);
-		manufacturer = self.stripLastCharacter(manufacturer);
-		if (manufacturer === "") {
+		manufacturer = String(manufacturer.dropLast());
+		manufacturer = String(manufacturer.dropLast());
+		if (manufacturer == "") {
 			manufacturer = "com.native-instruments";
 		}
-		if (!manufacturer.contains("w.a.production")) {
-			let dotPos = manufacturer.indexOf(".");
-			if (dotPos > 0) {
-				manufacturer = manufacturer.substring(0, dotPos);
-			}
-		}
-		manufacturer = self.checkSpecialCases(manufacturer, ident, plugin);
+		if !manufacturer.contains("w.a.production") {
+    	if let dotRange = manufacturer.range(of: ".") {
+        let dotPos = manufacturer.distance(from: manufacturer.startIndex, to: dotRange.lowerBound)
+        if dotPos > 0 {
+            manufacturer = String(manufacturer[..<dotRange.lowerBound])
+        }
+    	}
+		}		
+		manufacturer = self.checkSpecialCases(manufacturer: manufacturer, ident: ident, plugin: plugin);
 		return manufacturer;
+	}
+
+	func indexOf(subString: String, string: String) -> Int {
+		if let range = string.range(of: subString) {
+			return string.distance(from: string.startIndex, to: range.lowerBound)
+		}
+		return -1
 	}
 
 	func getReplacementsMap(plugin: String, pluginType: String) -> [String: String] {
@@ -75,11 +85,11 @@ class PluginManagerScannerUtils {
 		if (manufacturer.contains("Native-Instruments")) {
 			return "native instruments";
 		}
-		if (manufacturer === "g") {
+		if (manufacturer == "g") {
 			return "gtune";
 		}
-		if (plugin === "Xhip" || plugin === "NeuralNote") {
-			return plugin.toLowerCase();
+		if (plugin == "Xhip" || plugin == "NeuralNote") {
+			return plugin.lowercased();
 		}
 		if (plugin.contains("Odin2")) {
 			return "the wave warden";
@@ -93,11 +103,19 @@ class PluginManagerScannerUtils {
 		return manufacturer
 	}
 	
-	func stripLastCharacter(manufacturer: String) {
-		if (manufacturer.endsWith(".")) {
-			manufacturer = manufacturer.substring(0, manufacturer.length - 1);
+	func stripLastCharacter(manufacturer: String) -> String {
+		if (manufacturer.isEmpty) {
+			return manufacturer;
+		}
+		// check if the manufacturer ends with a dot
+		if (manufacturer.hasSuffix(".")) {
+			manufacturer = String(manufacturer.dropLast());
 		}
 		return manufacturer;
 	}
+
+	
+
+
 }
 

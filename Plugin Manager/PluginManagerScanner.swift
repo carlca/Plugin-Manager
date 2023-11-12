@@ -36,9 +36,9 @@ class PluginManagerScanner {
 			// build list of plugin triplets
 			plugins = buildPluginTriplets(pluginType: pluginType, pluginFolder: pluginFolder)
 			// Sort the plugin triplets
-			utils.sortPluginTripletsByManufacturerAndPlugin(plugins: [Triplet<String>])
+			plugins = utils.sortPluginTripletsByManufacturerAndPlugin(plugins: plugins)
 			// Print the plugins to the console
-			printPluginsToConsole(plugins: _plugins)
+			printPluginsToConsole(plugins: plugins)
 		}
 	}
 	
@@ -50,9 +50,9 @@ class PluginManagerScanner {
 		return pluginType
 	}
 	
-	private func buildPluginTriplets(pluginType: String, pluginFolder: String) -> [Triplet<String, String, String>] {
+	private func buildPluginTriplets(pluginType: String, pluginFolder: String) -> [Triplet<String>] {
 		let startPath = URL(fileURLWithPath: pluginFolder)
-		var plugins = [Triplet<String, String, String>]()
+		var plugins = [Triplet<String>]()
 		var paths = [URL]()
 		do {
 			try buildPListFileList(startPath: startPath, paths: &paths)
@@ -67,17 +67,19 @@ class PluginManagerScanner {
 		return plugins
 	}
 	
-	private func sortPluginTripletsByManufacturer(plugins: inout [Triplet<String, String, String>]) {
-		plugins.sort { $0.value0 < $1.value0 }
+	private func sortPluginTripletsByManufacturer(plugins:consuming [Triplet<String>]) -> [Triplet<String>] {
+		var mutPlugins = plugins
+		mutPlugins.sort { $0.p0 < $1.p0 }
+		return mutPlugins
 	}
 	
-	private func printPluginsToConsole(plugins: [Triplet<String, String, String>]) {
+	private func printPluginsToConsole(plugins: [Triplet<String>]) {
 		for plugin in plugins {
-			print("\(plugin.value0) - \(plugin.value1) - \(plugin.value2)")
+			print("\(plugin.p0) - \(plugin.p1) - \(plugin.p2)")
 		}
 	}
 	
-	private func processOnePListFile(pluginType: String, pluginFolder: String, plugins: inout [Triplet<String, String, String>], file: URL) {
+	private func processOnePListFile(pluginType: String, pluginFolder: String, plugins: inout [Triplet<String>], file: URL) {
 		var plugin = file.path.replacingOccurrences(of: pluginFolder, with: "")
 		plugin = plugin.replacingOccurrences(of: "." + pluginType + "/Contents/Info.plist", with: "")
 		plugin = plugin + "." + pluginType
@@ -88,7 +90,7 @@ class PluginManagerScanner {
 			// Extract the CFBundleIdentifier key-value pair
 			if let ident = doc["CFBundleIdentifier"] as? String {
 				let manufacturer = utils.createManufacturer(ident: ident, plugin: plugin, pluginType: pluginType)
-				plugins.append(Triplet<String, String, String>(manufacturer.lowercased(), ident, plugin))
+				plugins.append(Triplet<String>(p0: manufacturer.lowercased(), p1: ident, p2: plugin))
 			}
 		} catch {
 			print(error)
