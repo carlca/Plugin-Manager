@@ -14,7 +14,7 @@ import SwiftUI
 //	}
 //
 @main
-struct SwiftTestApp: App {
+struct PluginManagerApp: App {
 		var body: some Scene {
 				WindowGroup {
 						ContentView()
