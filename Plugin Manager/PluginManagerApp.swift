@@ -13,7 +13,7 @@ import SwiftUI
 //		scanner.processPlugins(pluginType: "CLAP")
 //	}
 //
-@main
+@main 
 struct PluginManagerApp: App {
 		var body: some Scene {
 				WindowGroup {

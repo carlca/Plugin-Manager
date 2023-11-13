@@ -41,18 +41,15 @@ class PluginManagerScanner {
 			printPluginsToConsole(plugins: plugins)
 		}
 	}
-	
+
 	func getPluginsAsText() -> String {
 		var result: String = ""
 		for plugin in plugins {
 			result += "\(plugin.p0) - \(plugin.p1) - \(plugin.p2)\n"
+		}
 		return result
 	}
-
-	for plugin in plugins {
-		print("\(plugin.p0) - \(plugin.p1) - \(plugin.p2)")
-	}
-
+	
 	private func ensureDefaultIfEmpty(pluginType: String, defaultType: String) -> String {
 		var pluginType = pluginType
 		if pluginType.isEmpty {
