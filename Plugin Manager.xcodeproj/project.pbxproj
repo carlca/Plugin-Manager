@@ -20,6 +20,7 @@
 		F14C84062B001B9F00A847AF /* PluginTriplet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C84052B001B9F00A847AF /* PluginTriplet.swift */; };
 		F1789A312B0249CE00F8043B /* Scratch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1789A302B0249CE00F8043B /* Scratch.swift */; };
 		F1789A332B024A4500F8043B /* TreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1789A322B024A4500F8043B /* TreeView.swift */; };
+		F18D6BBF2B03F70900281251 /* TextUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18D6BBE2B03F70900281251 /* TextUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,8 @@
 		F14C84052B001B9F00A847AF /* PluginTriplet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginTriplet.swift; sourceTree = "<group>"; };
 		F1789A302B0249CE00F8043B /* Scratch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scratch.swift; sourceTree = "<group>"; };
 		F1789A322B024A4500F8043B /* TreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeView.swift; sourceTree = "<group>"; };
+		F18D6BBE2B03F70900281251 /* TextUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextUtils.swift; sourceTree = "<group>"; };
+		F1CBCFDF2B03CA0F00558AEA /* SwiftLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftLib.framework; path = "../../../Library/Developer/Xcode/DerivedData/SwiftLib-amysgasquzefdhaxokcdoqjegbys/Build/Products/Debug/SwiftLib.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +96,7 @@
 				F14C83DF2AFEF67800A847AF /* Plugin ManagerTests */,
 				F14C83E92AFEF67800A847AF /* Plugin ManagerUITests */,
 				F14C83CC2AFEF67700A847AF /* Products */,
+				F1CBCFDE2B03CA0F00558AEA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -118,6 +122,7 @@
 				F14C83D22AFEF67700A847AF /* Assets.xcassets */,
 				F14C83D72AFEF67700A847AF /* Plugin_Manager.entitlements */,
 				F14C83D42AFEF67700A847AF /* Preview Content */,
+				F18D6BBE2B03F70900281251 /* TextUtils.swift */,
 			);
 			path = "Plugin Manager";
 			sourceTree = "<group>";
@@ -145,6 +150,14 @@
 				F14C83EC2AFEF67800A847AF /* Plugin_ManagerUITestsLaunchTests.swift */,
 			);
 			path = "Plugin ManagerUITests";
+			sourceTree = "<group>";
+		};
+		F1CBCFDE2B03CA0F00558AEA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				F1CBCFDF2B03CA0F00558AEA /* SwiftLib.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -211,7 +224,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1500;
-				LastUpgradeCheck = 1500;
+				LastUpgradeCheck = 1510;
 				TargetAttributes = {
 					F14C83CA2AFEF67700A847AF = {
 						CreatedOnToolsVersion = 15.0.1;
@@ -279,6 +292,7 @@
 			files = (
 				F14C84062B001B9F00A847AF /* PluginTriplet.swift in Sources */,
 				F14C83D12AFEF67700A847AF /* ContentView.swift in Sources */,
+				F18D6BBF2B03F70900281251 /* TextUtils.swift in Sources */,
 				F1789A312B0249CE00F8043B /* Scratch.swift in Sources */,
 				F14C84042B0019CD00A847AF /* PluginManagerDemoData.swift in Sources */,
 				F1789A332B024A4500F8043B /* TreeView.swift in Sources */,
@@ -355,6 +369,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -418,6 +433,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -448,7 +464,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Plugin Manager/Preview Content\"";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "../../../Library/Developer/Xcode/DerivedData/SwiftLib-amysgasquzefdhaxokcdoqjegbys/Build/Products/Debug/SwiftLib.framework Plugin\\ Manager/Preview\\ Content";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Plugin Manager";
@@ -475,7 +492,8 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Plugin Manager/Preview Content\"";
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_ASSET_PATHS = "../../../Library/Developer/Xcode/DerivedData/SwiftLib-amysgasquzefdhaxokcdoqjegbys/Build/Products/Debug/SwiftLib.framework Plugin\\ Manager/Preview\\ Content";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Plugin Manager";
@@ -500,6 +518,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.6;
 				MARKETING_VERSION = 1.0;
@@ -518,6 +537,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.6;
 				MARKETING_VERSION = 1.0;
@@ -535,6 +555,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.carlca.pluginmanager.Plugin-ManagerUITests";
@@ -551,6 +572,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.carlca.pluginmanager.Plugin-ManagerUITests";

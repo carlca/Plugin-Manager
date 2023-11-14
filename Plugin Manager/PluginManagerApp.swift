@@ -7,19 +7,18 @@
 
 import SwiftUI
 
-//@main
-//	init() {
-//		var scanner = PluginManagerScanner()
-//		scanner.processPlugins(pluginType: "CLAP")
-//	}
-//
-@main 
+@main
 struct PluginManagerApp: App {
-		var body: some Scene {
-				WindowGroup {
-						ContentView()
+	@Environment(\.scenePhase) private var scenePhase
+	var body: some Scene {
+		WindowGroup {
+			ContentView().onChange(of: scenePhase) { phase in
+				if phase == .active {
+					NSApp.activate(ignoringOtherApps: true)
 				}
+			}
 		}
+	}
 }
 
 #Preview {

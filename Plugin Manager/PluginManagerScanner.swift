@@ -37,8 +37,9 @@ class PluginManagerScanner {
 			plugins = buildPluginTriplets(pluginType: pluginType, pluginFolder: pluginFolder)
 			// Sort the plugin triplets
 			plugins = utils.sortPluginTripletsByManufacturerAndPlugin(plugins: &plugins)
+			plugins = utils.deduplicatePluginTripletsByManufacturerAndPlugin(plugins: &plugins)
 			// Print the plugins to the console
-			printPluginsToConsole()
+			// printPluginsToConsole()
 		}
 	}
 
@@ -87,8 +88,12 @@ class PluginManagerScanner {
 	
 	private func processOnePListFile(pluginType: String, pluginFolder: String, plugins: inout [PluginTriplet<String>], file: URL) {
 		var plugin = file.path.replacingOccurrences(of: pluginFolder, with: "")
-		plugin = plugin.replacingOccurrences(of: "." + pluginType + "/Contents/Info.plist", with: "")
-		plugin = plugin + "." + pluginType
+		if let range = plugin.range(of: "/Contents/") {
+			let startIndex = plugin.startIndex
+			let endIndex = range.lowerBound
+			let substring = plugin[startIndex..<endIndex]
+			plugin = String(substring)
+		}
 		// Open plist file as XML
 		do {
 			let data = try Data(contentsOf: file)
@@ -118,8 +123,8 @@ class PluginManagerScanner {
 		for plugin in plugins {
 			let parts = plugin.components(separatedBy: " - ")
 			let manufacturer = parts[0]
-			let ident = parts[1]
-			let pluginName = parts[2]
+			let pluginName = parts[1]
+			let ident = parts[2]
 			if pluginsByManufacturer[manufacturer] == nil {
 				pluginsByManufacturer[manufacturer] = [String]()
 			}

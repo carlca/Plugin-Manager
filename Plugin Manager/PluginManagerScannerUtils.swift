@@ -4,6 +4,16 @@ class PluginManagerScannerUtils {
 		plugins.sort {
 		  ($0.manufacturer, $0.plugin) < ($1.manufacturer, $1.plugin)
 		}
+		print(plugins.count)
+		return plugins
+	}
+	
+	func deduplicatePluginTripletsByManufacturerAndPlugin(plugins: inout [PluginTriplet<String>]) -> [PluginTriplet<String>] {
+		var seen = Set<String>()
+		plugins = plugins.filter { triplet in
+			let key = "\(triplet.manufacturer)-\(triplet.plugin)"
+			return seen.insert(key).inserted
+		}
 		return plugins
 	}
 	
@@ -60,7 +70,7 @@ class PluginManagerScannerUtils {
 	}
 
 	func checkSpecialCases(manufacturer: String, ident: String, plugin: String) -> String {
-		if (manufacturer.contains("w.a.production") || plugin.contains("Dragonfly")) {
+		if (manufacturer.contains("w.a.production")) {
 			return plugin;
 		}
 		if (
@@ -99,6 +109,9 @@ class PluginManagerScannerUtils {
 		if (ident.contains(".korg.")) {
 			return "korg"
 		}
+		if (ident.contains("net.sf.distrho.Dragonfly")) {
+			return "dragonfly"
+		}
 		return manufacturer
 	}
 	
@@ -112,9 +125,4 @@ class PluginManagerScannerUtils {
 		}
 		return manufacturer;
 	}
-
-	
-
-
 }
-
