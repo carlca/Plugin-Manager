@@ -2,19 +2,19 @@ import Foundation
 
 class PluginManagerDemoData {
 	
-	private var demoData = [Triplet<String>]()
+	private var demoData = [PluginTriplet<String>]()
 	
-	func buildTriplet(csvLine: String) -> [Triplet<String>] {
+	func buildTriplet(csvLine: String) -> [PluginTriplet<String>] {
 		let parts = csvLine.split(separator: ",")
 		if parts.count == 3 {
 			let s0 = String(parts[0]); let s1 = String(parts[1]); let s2 = String(parts[2])
-			return [Triplet(p0: s0, p1: s1, p2: s2)]
+			return [PluginTriplet(manufacturer: s0, plugin: s1, ident: s2)]
 		}
-		return [Triplet(p0: "invalid", p1: "invalid", p2: "invalid")]
+		return [PluginTriplet(manufacturer: "invalid", plugin: "invalid", ident: "invalid")]
 	}
 	
-	func getDemoData() -> [Triplet<String>] {
-		var demoData: [Triplet<String>] =  [Triplet<String>]()
+	func getDemoData() -> [PluginTriplet<String>] {
+		var demoData: [PluginTriplet<String>] =  [PluginTriplet<String>]()
 		demoData += buildTriplet(csvLine: "audio,audio.vital.synth,Vital.clap")
 		demoData += buildTriplet(csvLine: "audiodamage,com.audiodamage.dubstation2,Dubstation 2.clap")
 		demoData += buildTriplet(csvLine: "audiomodern,com.audiomodern.chordjam,Chordjam.clap")

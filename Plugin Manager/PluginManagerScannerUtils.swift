@@ -1,8 +1,8 @@
 class PluginManagerScannerUtils {
 
-	func sortPluginTripletsByManufacturerAndPlugin(plugins: inout [Triplet<String>]) -> [Triplet<String>] {
+	func sortPluginTripletsByManufacturerAndPlugin(plugins: inout [PluginTriplet<String>]) -> [PluginTriplet<String>] {
 		plugins.sort {
-		  ($0.p0, $0.p2) < ($1.p0, $1.p2)
+		  ($0.manufacturer, $0.plugin) < ($1.manufacturer, $1.plugin)
 		}
 		return plugins
 	}

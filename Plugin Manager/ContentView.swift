@@ -9,12 +9,11 @@ import SwiftUI
 
 struct ContentView: View {
 	@State private var selectedOption = "VST"
-	@State private var pluginsText = "Plugin 1\nPlugin 2"
+	@State private var plugins: [PluginTriplet<String>] = []
 	@State private var gridFontName = "Monaco"
 	
 	var body: some View {
 		let columns = [
-			GridItem(.flexible(), spacing: 60),
 			GridItem(.flexible(), spacing: 60),
 			GridItem(.flexible(), spacing: 60)
 		]
@@ -35,13 +34,14 @@ struct ContentView: View {
 					Button(action: {
 						let scanner = PluginManagerScanner()
 						scanner.processPlugins(pluginType: selectedOption)
-						self.pluginsText = scanner.getPluginsAsText()
+						self.plugins = scanner.getPlugins()
 					}) {
 						Text("Update")
 					}
 					.frame(minWidth: 150, idealWidth: 150, maxWidth: 150, maxHeight: 23, alignment: .center)
 					.padding(.top, 6)
 					.padding(.bottom, 0)
+					Spacer()
 				}
 				HStack {
 					Spacer()
@@ -50,37 +50,28 @@ struct ContentView: View {
 						.font(.custom(gridFontName, size: 14, relativeTo: .body))
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.background(Color.gray.opacity(0.3))
-					Text(" Ident ")
-						.font(.custom(gridFontName, size: 14, relativeTo: .body))
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.background(Color.gray.opacity(0.3))
 					Text(" Plugin ")
 						.font(.custom(gridFontName, size: 14, relativeTo: .body))
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.background(Color.gray.opacity(0.3))
+						.padding(.trailing, 8)
 				}
 				.alignmentGuide(VerticalAlignment.center, computeValue: { d in d[VerticalAlignment.center] })
 				.frame(width: geometry.size.width, alignment: .center)
-//				TextEditor(text: $pluginsText)
-//					.frame(maxWidth: .infinity, maxHeight: .infinity)
-//					.font(.custom("Monaco", size: 14, relativeTo: .body))
-//					.multilineTextAlignment(.leading)
-//					.lineSpacing(4.0)
 				ScrollView {
-					LazyVGrid(columns: columns, spacing: 3) {
-						ForEach(0..<100) { _ in
-							Text("Item")
-								.font(.custom(gridFontName, size: 14, relativeTo: .body))
-								.frame(maxWidth: .infinity, alignment: .leading)
-							Text("Item")
-								.font(.custom(gridFontName, size: 14, relativeTo: .body))
-								.frame(maxWidth: .infinity, alignment: .leading)
-							Text("Item")
-								.font(.custom(gridFontName, size: 14, relativeTo: .body))
-								.frame(maxWidth: .infinity, alignment: .leading)
+					ScrollViewReader { value in
+						LazyVGrid(columns: columns, spacing: 3) {
+							ForEach(plugins, id: \.self) { plugin in
+								Text(plugin.manufacturer)
+									.font(.custom(gridFontName, size: 14, relativeTo: .body))
+									.frame(maxWidth: .infinity, alignment: .leading)
+								Text(plugin.plugin)
+									.font(.custom(gridFontName, size: 14, relativeTo: .body))
+									.frame(maxWidth: .infinity, alignment: .leading)
+							}
 						}
 					}
-					.padding()
+					.padding(.leading, 16)
 				}
 			}
 			.frame(width: geometry.size.width)

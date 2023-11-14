@@ -3,7 +3,7 @@ import Foundation
 class PluginManagerScanner {
 	// property fields
 	private var csvFileName: String
-	private var plugins: [Triplet<String>]
+	private var plugins: [PluginTriplet<String>]
 	private var demoData: PluginManagerDemoData
 	private var utils: PluginManagerScannerUtils
 	
@@ -14,7 +14,7 @@ class PluginManagerScanner {
 		utils = PluginManagerScannerUtils()
 	}
 
-	func getPlugins() -> [Triplet<String>] {
+	func getPlugins() -> [PluginTriplet<String>] {
 		return plugins
 	}
 
@@ -38,14 +38,14 @@ class PluginManagerScanner {
 			// Sort the plugin triplets
 			plugins = utils.sortPluginTripletsByManufacturerAndPlugin(plugins: &plugins)
 			// Print the plugins to the console
-			printPluginsToConsole(plugins: plugins)
+			printPluginsToConsole()
 		}
 	}
 
 	func getPluginsAsText() -> String {
 		var result: String = ""
 		for plugin in plugins {
-			result += "\(plugin.p0) - \(plugin.p1) - \(plugin.p2)\n"
+			result += "\(plugin.manufacturer) - \(plugin.plugin) - \(plugin.ident)\n"
 		}
 		return result
 	}
@@ -58,15 +58,15 @@ class PluginManagerScanner {
 		return pluginType
 	}
 	
-	private func buildPluginTriplets(pluginType: String, pluginFolder: String) -> [Triplet<String>] {
+	private func buildPluginTriplets(pluginType: String, pluginFolder: String) -> [PluginTriplet<String>] {
 		let startPath = URL(fileURLWithPath: pluginFolder)
-		var plugins = [Triplet<String>]()
+		var plugins = [PluginTriplet<String>]()
 		var paths = [URL]()
 		do {
 			try buildPListFileList(startPath: startPath, paths: &paths)
 			// Process the files
 			for file in paths {
-				// This build the `paths` list of Manufacturer, Ident, Plugin Triplets
+				// This build the `paths` list of Manufacturer, Plugin, Ident
 				processOnePListFile(pluginType: pluginType, pluginFolder: pluginFolder, plugins: &plugins, file: file)
 			}
 		} catch {
@@ -75,19 +75,17 @@ class PluginManagerScanner {
 		return plugins
 	}
 	
-	private func sortPluginTripletsByManufacturer(plugins:consuming [Triplet<String>]) -> [Triplet<String>] {
+	private func sortPluginTripletsByManufacturer(plugins:consuming [PluginTriplet<String>]) -> [PluginTriplet<String>] {
 		var mutPlugins = plugins
-		mutPlugins.sort { $0.p0 < $1.p0 }
+		mutPlugins.sort { $0.manufacturer < $1.manufacturer }
 		return mutPlugins
 	}
 	
-	private func printPluginsToConsole(plugins: [Triplet<String>]) {
-		for plugin in plugins {
-			print("\(plugin.p0) - \(plugin.p1) - \(plugin.p2)")
-		}
+	private func printPluginsToConsole() {
+		print(getPluginsAsText())
 	}
 	
-	private func processOnePListFile(pluginType: String, pluginFolder: String, plugins: inout [Triplet<String>], file: URL) {
+	private func processOnePListFile(pluginType: String, pluginFolder: String, plugins: inout [PluginTriplet<String>], file: URL) {
 		var plugin = file.path.replacingOccurrences(of: pluginFolder, with: "")
 		plugin = plugin.replacingOccurrences(of: "." + pluginType + "/Contents/Info.plist", with: "")
 		plugin = plugin + "." + pluginType
@@ -98,7 +96,7 @@ class PluginManagerScanner {
 			// Extract the CFBundleIdentifier key-value pair
 			if let ident = doc["CFBundleIdentifier"] as? String {
 				let manufacturer = utils.createManufacturer(ident: ident, plugin: plugin, pluginType: pluginType)
-				plugins.append(Triplet<String>(p0: manufacturer.lowercased(), p1: ident, p2: plugin))
+				plugins.append(PluginTriplet<String>(manufacturer: manufacturer.lowercased(), plugin: plugin, ident: ident))
 			}
 		} catch {
 			print(error)
