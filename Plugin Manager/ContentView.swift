@@ -27,6 +27,7 @@ struct ContentView: View {
 						Text("VST").tag("VST")
 						Text("VST3").tag("VST3")
 						Text("CLAP").tag("CLAP")
+						Text("DEMO").tag("DEMO")
 					}
 					.pickerStyle(MenuPickerStyle())
 					.frame(minWidth: 150, idealWidth: 150, maxWidth: 150, maxHeight: 23, alignment: .center)
@@ -57,30 +58,33 @@ struct ContentView: View {
 				HStack {
 					Spacer()
 					
-					Text(" Manufacturer ")
+					Text(" Manufacturer ") // CORRECT
 						.font(.custom(gridFontName, size: 14, relativeTo: .body))
-						.frame(maxWidth: maxManufacturerWidth, alignment: .leading)
+						.frame(maxWidth: maxManufacturerWidth + 14, alignment: .leading)
 						.background(Color.gray.opacity(0.3))
-					Text(" Plugin ")
+					Text(" Plugin ")		// CORRECT
 						.font(.custom(gridFontName, size: 14, relativeTo: .body))
 						.frame(maxWidth: maxManufacturerWidth == 0 ? maxManufacturerWidth : .infinity, alignment: .leading)
 						.background(Color.gray.opacity(0.3))
 						.padding(.trailing, 8)
 				}
-//				.alignmentGuide(VerticalAlignment.center, computeValue: { d in d[VerticalAlignment.center] })
-				.frame(width: geometry.size.width) // , alignment: .center)
+
+				.frame(width: geometry.size.width)
 				ScrollView {
 					ScrollViewReader { value in
 						LazyVGrid(columns: columns, spacing: 3) {
 							ForEach(plugins, id: \.self) { plugin in
-								Text(plugin.manufacturer)
-									.font(.custom(gridFontName, size: 14, relativeTo: .body))
-									.frame(maxWidth: maxManufacturerWidth, alignment: .leading)
-									.alignmentGuide(.leading) { d in d[.leading] }
-								Text(plugin.plugin)
-									.font(.custom(gridFontName, size: 14, relativeTo: .body))
-									.frame(maxWidth: .infinity, alignment: .leading)
-									.alignmentGuide(.leading) { d in d[.leading] }
+								HStack {
+									HStack {
+										Text(plugin.manufacturer) // CORRECT
+											.font(.custom(gridFontName, size: 14, relativeTo: .body))
+											.frame(maxWidth: maxManufacturerWidth, alignment: .leading)
+										Text(plugin.plugin)     // WRONG
+											.font(.custom(gridFontName, size: 14, relativeTo: .body))
+											.frame(maxWidth: .infinity, alignment: .leading)
+									}
+								}
+								.frame(maxWidth: .infinity, alignment: .leading)
 							}
 						}
 					}

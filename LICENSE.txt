@@ -1,0 +1,31 @@
+"Plugin Manager" Work-in-Progress License Agreement
+
+This Work-in-Progress License Agreement ("Agreement") is made and entered into by and between Early Spring / Carl Caulkett ("Licensor") and the individual or entity accessing the Work-in-Progress software ("Licensee").
+
+1. Grant of License:
+Subject to the terms of this Agreement, Licensor hereby grants Licensee a non-exclusive, non-transferable, limited license to view the "Plugin Manager" in its current Work-in-Progress stage ("Software") for the sole purpose of evaluation and review.
+
+2. Restrictions:
+a. Licensee shall not copy, modify, distribute, sell, or create derivative works based on the Software.
+b. Licensee shall not use the Software for any commercial purpose.
+c. Licensee agrees to keep the Software confidential and not disclose any part of it to any third party.
+
+3. Intellectual Property:
+All intellectual property rights in the Software remain the property of Licensor. No title to or ownership of the Software is transferred to Licensee under this Agreement.
+
+4. Non-Disclosure:
+Licensee agrees to keep the Software and any information obtained from it confidential and shall not disclose any part of it to any third party without the prior written consent of Licensor.
+
+5. Term and Termination:
+This Agreement shall commence upon Licensee's acceptance and remain in effect until terminated. Licensor may terminate this Agreement at any time without notice.
+
+6. No Warranties:
+The Software is provided "as is" without any warranties of any kind, either express or implied. Licensor makes no warranty with respect to the accuracy, functionality, or performance of the Software.
+
+7. Limitation of Liability:
+In no event shall Licensor be liable for any damages whatsoever arising out of the use of or inability to use the Software.
+
+8. General:
+This Agreement constitutes the entire agreement between the parties with respect to the Software and supersedes all prior or contemporaneous understandings regarding such subject matter.
+
+By accessing the Software, Licensee agrees to be bound by the terms of this Agreement.Plugin Manager
