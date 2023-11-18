@@ -123,71 +123,94 @@ struct ContentView: View {
 	
 	func displayColumnHeaders() -> some View {
 		return HStack {
-			Spacer()
-			Text(" Manufacturer ")
-				.font(.custom(gridFontName, size: 14, relativeTo: .body))
-				.frame(maxWidth: maxManufacturerWidth + 14, alignment: .leading)
-				.background(Color.gray.opacity(0.3))
-			Text(" Plugin " + filterObserver.filterText)
-				.font(.custom(gridFontName, size: 14, relativeTo: .body))
-				.frame(maxWidth: maxManufacturerWidth == 0 ? maxManufacturerWidth : .infinity, alignment: .leading)
-				.background(Color.gray.opacity(0.3))
-				.padding(.trailing, 8)
+			if plugins.count > 0 {
+				Spacer()
+				Text(" Manufacturer ")
+					.font(.custom(gridFontName, size: 14, relativeTo: .body))
+					.frame(maxWidth: maxManufacturerWidth + 14, alignment: .leading)
+					.background(Color.gray.opacity(0.3))
+					
+				Text(" Plugin " + filterObserver.filterText)
+					.font(.custom(gridFontName, size: 14, relativeTo: .body))
+					.frame(maxWidth: maxManufacturerWidth == 0 ? maxManufacturerWidth : .infinity, alignment: .leading)
+					.background(Color.gray.opacity(0.3))
+					.padding(.trailing, 8)
+			}
 		}
 	}
 	
 	func displayGridRow(plugin: PluginTriplet<String>) -> some View {
-		let parts = plugin.plugin.split(separator: "/", maxSplits: 10)
-		let manufacturerPad = String(repeating: " ", count: maxManufacturerLength - plugin.manufacturer.count)
-		let pluginPad = String(repeating: " ", count: maxPluginLength - plugin.plugin.count + 1)
 		return GridRow(alignment: .none) {
-			// Display the Manufacturer name
-			// manufacturerPad is used to pad the name to the width of the longest manufacturer name
-			Text(plugin.manufacturer + manufacturerPad)
-				.foregroundColor(.teal)
-				.font(.custom(gridFontName, size: 14, relativeTo: .body))
-				.frame(alignment: .leading)
-				.padding(.leading, 17)
-			HStack(spacing: 0) {
-				// If no slashes then there is no sub-folder: just print the plugin name
-				if parts.count == 1 {
-					Text(String(parts[0]) + pluginPad)
-						.foregroundColor(.teal)
-						.font(.custom(gridFontName, size: 14, relativeTo: .body))
-						.padding(.leading, 14)
-				} else {
-					// There are sub-folders
-					// Build a color array
-					let hexColors = ["FFFFFF", "CC99CC", "6699CC"]
-					let colors: [Color] = hexColors.compactMap { hexToColor(hex: $0) }
-					// Each sub-folder has a separate Text block
-					HStack(spacing: 0) {
-						let indices = parts.indices.dropLast()
-						ForEach(indices, id: \.self) { index in
-							let part = String(parts[index])
-							// Use modulo operation to cycle through colors if there are more parts than colors
-							let color = colors[index % colors.count]
-							let text = Text(part + "/")
-								.foregroundColor(color)
-								.font(.custom(gridFontName, size: 14, relativeTo: .body))
-							// Set the padding of the displayed sub-folder to 14 if it is the first part of the path, 0 otherwise
-							let paddedText = text.padding(.leading, index == 0 ? 14 : 0)
-							paddedText
-						}
-						// Grab the last part of the parts array. This is the plug filename itself
-						// pluginPad is used to pad the name to the width of the longest plugin name + path
-						let lastPart = String(parts.last ?? "") + pluginPad
-						let lastPartText = Text(lastPart)
-							.foregroundColor(.teal)
-							.font(.custom(gridFontName, size: 14, relativeTo: .body))
-						lastPartText
-					}
-				}
-			}
+			displayManufacturerColumn(plugin: plugin)
+			displayPluginColumn(plugin: plugin)
 		}
 		//.background(plugin == pluginDict[pluginIndex] ? Color.yellow : Color.clear)
 	}
+	
+	func displayManufacturerColumn(plugin: PluginTriplet<String>) -> some View {
+		// manufacturerPad is used to pad the name to the width of the longest manufacturer name
+		let manufacturerPad = String(repeating: " ", count: maxManufacturerLength - plugin.manufacturer.count)
+		return Text(plugin.manufacturer + manufacturerPad)
+			.foregroundColor(.teal)
+			.font(.custom(gridFontName, size: 14, relativeTo: .body))
+			.frame(maxWidth: maxManufacturerWidth + 14, alignment: .leading)
+			.padding(.leading, 17)
+	}
 
+	func displayPluginColumn(plugin: PluginTriplet<String>) -> some View {
+		let parts = plugin.plugin.split(separator: "/", maxSplits: 10)
+		let pluginPad = String(repeating: " ", count: maxPluginLength - plugin.plugin.count + 1)
+		return HStack(spacing: 0) {
+			if parts.count == 1 {
+				displayPluginNameOnly(parts: parts, pluginPad: pluginPad)
+			} else {
+				displaySubFoldersAndPlugin(parts: parts, pluginPad: pluginPad)
+			}
+		}
+	}
+	
+	func displayPluginNameOnly(parts: [Substring], pluginPad: String) -> some View {
+		return Text(String(parts[0]) + pluginPad)
+			.foregroundColor(.teal)
+			.font(.custom(gridFontName, size: 14, relativeTo: .body))
+			.padding(.leading, 14)
+	}
+	
+	func displaySubFoldersAndPlugin(parts: [Substring], pluginPad: String) -> some View {
+		return HStack(spacing: 0) {
+			let indices = parts.indices.dropLast()
+			ForEach(indices, id: \.self) { index in
+				displayOneSubFolder(parts: parts, index: index)
+			}
+			displayPluginFileName(parts: parts, pluginPad: pluginPad)
+		}
+	}
+
+	func displayOneSubFolder(parts: [Substring], index: Int) -> some View {
+		let part = String(parts[index])
+		let color = getSubFolderColor(parts: parts, index: index)
+		let text = Text(part + "/")
+			.foregroundColor(color)
+			.font(.custom(gridFontName, size: 14, relativeTo: .body))
+		// Set the padding of the displayed sub-folder to 14 if it is the first part of the path, 0 otherwise
+		let paddedText = text.padding(.leading, index == 0 ? 14 : 0)
+		return paddedText
+	}
+
+	func displayPluginFileName(parts: [Substring], pluginPad: String) -> some View {
+		let lastPart = String(parts.last ?? "") + pluginPad
+		let lastPartText = Text(lastPart)
+			.foregroundColor(.teal)
+			.font(.custom(gridFontName, size: 14, relativeTo: .body))
+		return lastPartText
+	}
+	
+	func getSubFolderColor(parts: [Substring], index: Int) -> Color {
+		let hexColors = ["FFFFFF", "CC99CC", "6699CC"]
+		let colors: [Color] = hexColors.compactMap { hexToColor(hex: $0) }
+		return colors[index % colors.count]
+	}
+	
 	func createPluginDictionary(plugins: [PluginTriplet<String>]) -> [Int: PluginTriplet<String>] {
 		var pluginDict = [Int: PluginTriplet<String>]()
 		var pluginIndex = 0
