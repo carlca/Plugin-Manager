@@ -19,8 +19,6 @@
 		F14C84022AFFAE1500A847AF /* PluginManagerScanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C84012AFFAE1500A847AF /* PluginManagerScanner.swift */; };
 		F14C84042B0019CD00A847AF /* PluginManagerDemoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C84032B0019CD00A847AF /* PluginManagerDemoData.swift */; };
 		F14C84062B001B9F00A847AF /* PluginTriplet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14C84052B001B9F00A847AF /* PluginTriplet.swift */; };
-		F1789A312B0249CE00F8043B /* Scratch.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1789A302B0249CE00F8043B /* Scratch.swift */; };
-		F1789A332B024A4500F8043B /* TreeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1789A322B024A4500F8043B /* TreeView.swift */; };
 		F18D6BBF2B03F70900281251 /* TextUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = F18D6BBE2B03F70900281251 /* TextUtils.swift */; };
 /* End PBXBuildFile section */
 
@@ -58,8 +56,6 @@
 		F14C84012AFFAE1500A847AF /* PluginManagerScanner.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginManagerScanner.swift; sourceTree = "<group>"; };
 		F14C84032B0019CD00A847AF /* PluginManagerDemoData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginManagerDemoData.swift; sourceTree = "<group>"; };
 		F14C84052B001B9F00A847AF /* PluginTriplet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PluginTriplet.swift; sourceTree = "<group>"; };
-		F1789A302B0249CE00F8043B /* Scratch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scratch.swift; sourceTree = "<group>"; };
-		F1789A322B024A4500F8043B /* TreeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeView.swift; sourceTree = "<group>"; };
 		F18D6BBE2B03F70900281251 /* TextUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextUtils.swift; sourceTree = "<group>"; };
 		F1CBCFDF2B03CA0F00558AEA /* SwiftLib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftLib.framework; path = "../../../Library/Developer/Xcode/DerivedData/SwiftLib-amysgasquzefdhaxokcdoqjegbys/Build/Products/Debug/SwiftLib.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -93,8 +89,6 @@
 			isa = PBXGroup;
 			children = (
 				F14270D42B054B3500B6E420 /* LICENSE.txt */,
-				F1789A302B0249CE00F8043B /* Scratch.swift */,
-				F1789A322B024A4500F8043B /* TreeView.swift */,
 				F14C83CD2AFEF67700A847AF /* Plugin Manager */,
 				F14C83DF2AFEF67800A847AF /* Plugin ManagerTests */,
 				F14C83E92AFEF67800A847AF /* Plugin ManagerUITests */,
@@ -297,9 +291,7 @@
 				F14C84062B001B9F00A847AF /* PluginTriplet.swift in Sources */,
 				F14C83D12AFEF67700A847AF /* ContentView.swift in Sources */,
 				F18D6BBF2B03F70900281251 /* TextUtils.swift in Sources */,
-				F1789A312B0249CE00F8043B /* Scratch.swift in Sources */,
 				F14C84042B0019CD00A847AF /* PluginManagerDemoData.swift in Sources */,
-				F1789A332B024A4500F8043B /* TreeView.swift in Sources */,
 				F14C83FE2AFFADDF00A847AF /* PluginManagerApp.swift in Sources */,
 				F14C84002AFFADEB00A847AF /* PluginManagerScannerUtils.swift in Sources */,
 				F14C84022AFFAE1500A847AF /* PluginManagerScanner.swift in Sources */,

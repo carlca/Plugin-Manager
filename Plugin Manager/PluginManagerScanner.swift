@@ -38,8 +38,6 @@ class PluginManagerScanner {
 			// Sort the plugin triplets
 			plugins = utils.sortPluginTripletsByManufacturerAndPlugin(plugins: &plugins)
 			plugins = utils.deduplicatePluginTripletsByManufacturerAndPlugin(plugins: &plugins)
-			// Print the plugins to the console
-			// printPluginsToConsole()
 		}
 	}
 
@@ -88,23 +86,26 @@ class PluginManagerScanner {
 	
 	private func processOnePListFile(pluginType: String, pluginFolder: String, plugins: inout [PluginTriplet<String>], file: URL) {
 		var plugin = file.path.replacingOccurrences(of: pluginFolder, with: "")
-		if let range = plugin.range(of: "/Contents/") {
-			let startIndex = plugin.startIndex
-			let endIndex = range.lowerBound
-			let substring = plugin[startIndex..<endIndex]
-			plugin = String(substring)
-		}
-		// Open plist file as XML
-		do {
-			let data = try Data(contentsOf: file)
-			let doc = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as! [String: Any]
-			// Extract the CFBundleIdentifier key-value pair
-			if let ident = doc["CFBundleIdentifier"] as? String {
-				let manufacturer = utils.createManufacturer(ident: ident, plugin: plugin, pluginType: pluginType)
-				plugins.append(PluginTriplet<String>(manufacturer: manufacturer.lowercased(), plugin: plugin, ident: ident))
+		// Avoiding non-Contents folders within the plugin - looking at you Kilohearts 😠
+		if !plugin.contains("/3/") {
+			if let range = plugin.range(of: "/Contents/") {
+				let startIndex = plugin.startIndex
+				let endIndex = range.lowerBound
+				let substring = plugin[startIndex..<endIndex]
+				plugin = String(substring)
 			}
-		} catch {
-			print(error)
+			// Open plist file as XML
+			do {
+				let data = try Data(contentsOf: file)
+				let doc = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as! [String: Any]
+				// Extract the CFBundleIdentifier key-value pair
+				if let ident = doc["CFBundleIdentifier"] as? String {
+					let manufacturer = utils.createManufacturer(ident: ident, plugin: plugin, pluginType: pluginType)
+					plugins.append(PluginTriplet<String>(manufacturer: manufacturer.lowercased(), plugin: plugin, ident: ident))
+				}
+			} catch {
+				print(error)
+			}
 		}
 	}
 	
