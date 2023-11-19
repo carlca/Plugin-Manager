@@ -35,9 +35,12 @@ struct ContentView: View {
 	@State private var maxPluginLength: Int = 0
 	@State private var currentPlugin: PluginTriplet<String>? = nil
 	@State private var pluginDict: [String: Int] = [:]
-	@State private var pluginIndex: Int = -1
+	@State private var pluginIndex: Int = 0
+	@State private var firstVisibleRow: Int = 0
+	@State private var lastVisibleRow: Int = 0
+	@State private var scrollRequest: Int = 0
 	@StateObject private var filterObserver = TextFieldObserver()
-	
+		
 	var body: some View {
 		GeometryReader { geometry in
 			VStack {
@@ -47,7 +50,7 @@ struct ContentView: View {
 			}
 		}
 	}
-
+	
 	func displayTopRowControls() -> some View {
 		return HStack {
 			displayPluginTypePicker()
@@ -79,7 +82,7 @@ struct ContentView: View {
 			// Find the longest manufacturer and plugin names
 			pluginDict = createPluginDictionary(plugins: plugins)
 			for plugin in self.plugins {
-				let manufacturerWidth: CGFloat = TextUtils.textSize(text: plugin.manufacturer, fontName: "Monaco", size: 14)
+				let manufacturerWidth: CGFloat = TextUtils.textWidth(text: plugin.manufacturer, fontName: "Monaco", size: 14)
 				maxManufacturerWidth = max(maxManufacturerWidth, manufacturerWidth)
 				maxManufacturerLength = max(maxManufacturerLength, plugin.manufacturer.count)
 				maxPluginLength = max(maxPluginLength, plugin.plugin.count)
@@ -97,23 +100,83 @@ struct ContentView: View {
 			.padding(.top, 6)
 			.onReceive(filterObserver.$filterText) { newValue in
 				pluginDict = createPluginDictionary(plugins: plugins)
+				pluginIndex = 0
+			}
+			.background {
+				ZStack {
+					Button("") {
+						if pluginIndex < pluginDict.count {
+							pluginIndex += 1
+							if pluginIndex > lastVisibleRow {
+								lastVisibleRow = pluginIndex
+								firstVisibleRow += 1
+								scrollRequest = 1				// SCROLL DOWN
+							}
+						}
+					}
+					.keyboardShortcut(KeyboardShortcut(.downArrow, modifiers: []))
+					Button("") {
+						if pluginIndex > 0 {
+							pluginIndex -= 1
+							if pluginIndex < firstVisibleRow {
+								firstVisibleRow = pluginIndex
+								lastVisibleRow -= 1
+								scrollRequest = -1			// SCROLL UP
+							}
+						}
+					}
+					.keyboardShortcut(KeyboardShortcut(.upArrow, modifiers: []))
+				}
+				.opacity(0)
 			}
 	}
 	
 	func displayPluginGrid() -> some View {
-		return HStack {
-			ScrollView {
+		GeometryReader { geometry in
+			HStack {
 				ScrollViewReader { scrollView in
-					displayPluginGridInternal()
+					ScrollView {
+						displayPluginGridInternal()
+					}
+					.background(GeometryReader { proxy in
+						Color.clear.onAppear {
+						}
+						.onChange(of: proxy.size) { newSize in
+							updateVisibleRows(size: newSize.height)
+						}
+					}
+					.onChange(of: scrollRequest) { newScrollRequest in
+						if newScrollRequest != 0 {
+							scrollRequest = 0
+							let currentScrollPosition = geometry.frame(in: .global).minY
+							let scrollOffset = CGFloat(newScrollRequest) * TextUtils.textHeight(text: "XXXX", fontName: "Monaco", size: 14)
+							let newScrollPosition = currentScrollPosition + CGFloat(scrollOffset)
+							scrollView.scrollTo(newScrollPosition, anchor: .top)
+						}
+					})
 				}
+				Spacer()
 			}
-			Spacer()
+			.background(GeometryReader { proxy in
+				Color.clear.onAppear {
+					// Additional background logic here
+				}
+			})
 		}
 	}
 	
+	func updateVisibleRows(size: CGFloat) {
+		let visibleRowCount = getVisibleRowCount(size: size)
+		lastVisibleRow = firstVisibleRow + visibleRowCount - 1
+	}
+	
+	func getVisibleRowCount(size: CGFloat) -> Int {
+		let rowHeight: CGFloat = TextUtils.textHeight(text: "XXXX", fontName: "Monaco", size: 14)
+		return Int(floor(size / rowHeight))
+	}
+
 	func displayPluginGridInternal() -> some View {
 		return Grid(alignment: .leading) {
-			var pluginIndex = 0
 			ForEach(plugins, id: \.self) { plugin in
 				if shouldPluginShow(plugin: plugin) {
 					displayGridRow(plugin: plugin)
@@ -130,8 +193,8 @@ struct ContentView: View {
 					.font(.custom(gridFontName, size: 14, relativeTo: .body))
 					.frame(maxWidth: maxManufacturerWidth + 16, alignment: .leading)
 					.background(Color.gray.opacity(0.3))
-					
-				Text(" Plugin " + filterObserver.filterText)
+				
+				Text(" Plugin " + "First: " + String(firstVisibleRow) + " Last: " + String(lastVisibleRow))
 					.font(.custom(gridFontName, size: 14, relativeTo: .body))
 					.frame(maxWidth: maxManufacturerWidth == 0 ? maxManufacturerWidth : .infinity, alignment: .leading)
 					.background(Color.gray.opacity(0.3))
@@ -151,13 +214,13 @@ struct ContentView: View {
 	func displayManufacturerColumn(plugin: PluginTriplet<String>) -> some View {
 		let manufacturerPad = String(repeating: " ", count: maxManufacturerLength - plugin.manufacturer.count + 1)
 		return Text(plugin.manufacturer + manufacturerPad)
-			.foregroundColor(pluginDict[plugin.plugin] == 0 ? Color.white : Color.teal)
+			.foregroundColor(pluginDict[plugin.plugin] == pluginIndex ? Color.yellow : Color.teal)
 			.font(.custom(gridFontName, size: 14, relativeTo: .body))
 			.frame(maxWidth: maxManufacturerWidth + 6, alignment: .leading)
 			.padding(.leading, 10)
-			.background(pluginDict[plugin.plugin] == 0 ? Color.accentColor : Color.clear)
+			.background(pluginDict[plugin.plugin] == pluginIndex ? Color.accentColor : Color.clear)
 	}
-
+	
 	func displayPluginColumn(plugin: PluginTriplet<String>) -> some View {
 		let parts = plugin.plugin.split(separator: "/", maxSplits: 10)
 		let pluginPad = String(repeating: " ", count: maxPluginLength - plugin.plugin.count + 1)
@@ -168,12 +231,12 @@ struct ContentView: View {
 				displaySubFoldersAndPlugin(plugin: plugin, parts: parts, pluginPad: pluginPad)
 			}
 		}
-		.background(pluginDict[plugin.plugin] == 0 ? Color.accentColor : Color.clear)
+		.background(pluginDict[plugin.plugin] == pluginIndex ? Color.accentColor : Color.clear)
 	}
 	
 	func displayPluginNameOnly(plugin: PluginTriplet<String>, parts: [Substring], pluginPad: String) -> some View {
 		return Text(String(parts[0]) + pluginPad)
-			.foregroundColor(pluginDict[plugin.plugin] == 0 ? Color.white : .teal)
+			.foregroundColor(pluginDict[plugin.plugin] == pluginIndex ? Color.yellow : .teal)
 			.font(.custom(gridFontName, size: 14, relativeTo: .body))
 			.padding(.leading, 8)
 	}
@@ -187,22 +250,22 @@ struct ContentView: View {
 			displayPluginFileName(plugin: plugin, parts: parts, pluginPad: pluginPad)
 		}
 	}
-
+	
 	func displayOneSubFolder(plugin: PluginTriplet<String>, parts: [Substring], index: Int) -> some View {
 		let part = String(parts[index])
 		let color = getSubFolderColor(parts: parts, index: index)
 		let text = Text(part + "/")
-			.foregroundColor(pluginDict[plugin.plugin] == 0 ? Color.white : color)
+			.foregroundColor(pluginDict[plugin.plugin] == pluginIndex ? Color.yellow : color)
 			.font(.custom(gridFontName, size: 14, relativeTo: .body))
 		// Set the padding of the displayed sub-folder to 8 if it is the first part of the path, 0 otherwise
 		let paddedText = text.padding(.leading, index == 0 ? 8 : 0)
 		return paddedText
 	}
-
+	
 	func displayPluginFileName(plugin: PluginTriplet<String>, parts: [Substring], pluginPad: String) -> some View {
 		let lastPart = String(parts.last ?? "") + pluginPad
 		let lastPartText = Text(lastPart)
-			.foregroundColor(pluginDict[plugin.plugin] == 0 ? Color.white : .teal)
+			.foregroundColor(pluginDict[plugin.plugin] == pluginIndex ? Color.yellow : .teal)
 			.font(.custom(gridFontName, size: 14, relativeTo: .body))
 		return lastPartText
 	}
@@ -224,12 +287,13 @@ struct ContentView: View {
 		}
 		return pluginDict
 	}
-
+	
 	func shouldPluginShow(plugin: PluginTriplet<String>) -> Bool {
 		if filterObserver.filterText.isEmpty || plugin.manufacturer.lowercased().contains(filterObserver.filterText.lowercased()) ||
-		plugin.plugin.lowercased().contains(filterObserver.filterText.lowercased()) {
+				plugin.plugin.lowercased().contains(filterObserver.filterText.lowercased()) {
 			return true
 		}
 		return false
 	}
 }
+
