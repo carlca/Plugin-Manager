@@ -34,7 +34,8 @@ struct ContentView: View {
 	@State private var maxManufacturerLength: Int = 0
 	@State private var maxPluginLength: Int = 0
 	@State private var currentPlugin: PluginTriplet<String>? = nil
-	@State private var pluginDict = [Int: PluginTriplet<String>]()
+	@State private var pluginDict: [String: Int] = [:]
+	@State private var pluginIndex: Int = -1
 	@StateObject private var filterObserver = TextFieldObserver()
 	
 	var body: some View {
@@ -76,6 +77,7 @@ struct ContentView: View {
 			self.plugins = scanner.getPlugins()
 			maxManufacturerWidth = 0
 			// Find the longest manufacturer and plugin names
+			pluginDict = createPluginDictionary(plugins: plugins)
 			for plugin in self.plugins {
 				let manufacturerWidth: CGFloat = TextUtils.textSize(text: plugin.manufacturer, fontName: "Monaco", size: 14)
 				maxManufacturerWidth = max(maxManufacturerWidth, manufacturerWidth)
@@ -111,9 +113,8 @@ struct ContentView: View {
 	
 	func displayPluginGridInternal() -> some View {
 		return Grid(alignment: .leading) {
-			// let pluginIndex = 0
+			var pluginIndex = 0
 			ForEach(plugins, id: \.self) { plugin in
-				// Only display the row if no filter is active or if the plugin adheres to the filter
 				if shouldPluginShow(plugin: plugin) {
 					displayGridRow(plugin: plugin)
 				}
@@ -127,7 +128,7 @@ struct ContentView: View {
 				Spacer()
 				Text(" Manufacturer ")
 					.font(.custom(gridFontName, size: 14, relativeTo: .body))
-					.frame(maxWidth: maxManufacturerWidth + 14, alignment: .leading)
+					.frame(maxWidth: maxManufacturerWidth + 16, alignment: .leading)
 					.background(Color.gray.opacity(0.3))
 					
 				Text(" Plugin " + filterObserver.filterText)
@@ -141,20 +142,20 @@ struct ContentView: View {
 	
 	func displayGridRow(plugin: PluginTriplet<String>) -> some View {
 		return GridRow(alignment: .none) {
+			Spacer().frame(width: 8)
 			displayManufacturerColumn(plugin: plugin)
 			displayPluginColumn(plugin: plugin)
 		}
-		//.background(plugin == pluginDict[pluginIndex] ? Color.yellow : Color.clear)
 	}
 	
 	func displayManufacturerColumn(plugin: PluginTriplet<String>) -> some View {
-		// manufacturerPad is used to pad the name to the width of the longest manufacturer name
-		let manufacturerPad = String(repeating: " ", count: maxManufacturerLength - plugin.manufacturer.count)
+		let manufacturerPad = String(repeating: " ", count: maxManufacturerLength - plugin.manufacturer.count + 1)
 		return Text(plugin.manufacturer + manufacturerPad)
-			.foregroundColor(.teal)
+			.foregroundColor(pluginDict[plugin.plugin] == 0 ? Color.white : Color.teal)
 			.font(.custom(gridFontName, size: 14, relativeTo: .body))
-			.frame(maxWidth: maxManufacturerWidth + 14, alignment: .leading)
-			.padding(.leading, 17)
+			.frame(maxWidth: maxManufacturerWidth + 6, alignment: .leading)
+			.padding(.leading, 10)
+			.background(pluginDict[plugin.plugin] == 0 ? Color.accentColor : Color.clear)
 	}
 
 	func displayPluginColumn(plugin: PluginTriplet<String>) -> some View {
@@ -162,45 +163,46 @@ struct ContentView: View {
 		let pluginPad = String(repeating: " ", count: maxPluginLength - plugin.plugin.count + 1)
 		return HStack(spacing: 0) {
 			if parts.count == 1 {
-				displayPluginNameOnly(parts: parts, pluginPad: pluginPad)
+				displayPluginNameOnly(plugin: plugin, parts: parts, pluginPad: pluginPad)
 			} else {
-				displaySubFoldersAndPlugin(parts: parts, pluginPad: pluginPad)
+				displaySubFoldersAndPlugin(plugin: plugin, parts: parts, pluginPad: pluginPad)
 			}
 		}
+		.background(pluginDict[plugin.plugin] == 0 ? Color.accentColor : Color.clear)
 	}
 	
-	func displayPluginNameOnly(parts: [Substring], pluginPad: String) -> some View {
+	func displayPluginNameOnly(plugin: PluginTriplet<String>, parts: [Substring], pluginPad: String) -> some View {
 		return Text(String(parts[0]) + pluginPad)
-			.foregroundColor(.teal)
+			.foregroundColor(pluginDict[plugin.plugin] == 0 ? Color.white : .teal)
 			.font(.custom(gridFontName, size: 14, relativeTo: .body))
-			.padding(.leading, 14)
+			.padding(.leading, 8)
 	}
 	
-	func displaySubFoldersAndPlugin(parts: [Substring], pluginPad: String) -> some View {
+	func displaySubFoldersAndPlugin(plugin: PluginTriplet<String>, parts: [Substring], pluginPad: String) -> some View {
 		return HStack(spacing: 0) {
 			let indices = parts.indices.dropLast()
 			ForEach(indices, id: \.self) { index in
-				displayOneSubFolder(parts: parts, index: index)
+				displayOneSubFolder(plugin: plugin, parts: parts, index: index)
 			}
-			displayPluginFileName(parts: parts, pluginPad: pluginPad)
+			displayPluginFileName(plugin: plugin, parts: parts, pluginPad: pluginPad)
 		}
 	}
 
-	func displayOneSubFolder(parts: [Substring], index: Int) -> some View {
+	func displayOneSubFolder(plugin: PluginTriplet<String>, parts: [Substring], index: Int) -> some View {
 		let part = String(parts[index])
 		let color = getSubFolderColor(parts: parts, index: index)
 		let text = Text(part + "/")
-			.foregroundColor(color)
+			.foregroundColor(pluginDict[plugin.plugin] == 0 ? Color.white : color)
 			.font(.custom(gridFontName, size: 14, relativeTo: .body))
 		// Set the padding of the displayed sub-folder to 14 if it is the first part of the path, 0 otherwise
 		let paddedText = text.padding(.leading, index == 0 ? 14 : 0)
 		return paddedText
 	}
 
-	func displayPluginFileName(parts: [Substring], pluginPad: String) -> some View {
+	func displayPluginFileName(plugin: PluginTriplet<String>, parts: [Substring], pluginPad: String) -> some View {
 		let lastPart = String(parts.last ?? "") + pluginPad
 		let lastPartText = Text(lastPart)
-			.foregroundColor(.teal)
+			.foregroundColor(pluginDict[plugin.plugin] == 0 ? Color.white : .teal)
 			.font(.custom(gridFontName, size: 14, relativeTo: .body))
 		return lastPartText
 	}
@@ -211,12 +213,12 @@ struct ContentView: View {
 		return colors[index % colors.count]
 	}
 	
-	func createPluginDictionary(plugins: [PluginTriplet<String>]) -> [Int: PluginTriplet<String>] {
-		var pluginDict = [Int: PluginTriplet<String>]()
+	func createPluginDictionary(plugins: [PluginTriplet<String>]) -> [String: Int] {
+		var pluginDict = [String: Int]()
 		var pluginIndex = 0
 		for plugin in plugins {
 			if shouldPluginShow(plugin: plugin) {
-				pluginDict[pluginIndex] = plugin
+				pluginDict[plugin.plugin] = pluginIndex
 				pluginIndex += 1
 			}
 		}
