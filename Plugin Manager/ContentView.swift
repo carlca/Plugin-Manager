@@ -194,8 +194,8 @@ struct ContentView: View {
 		let text = Text(part + "/")
 			.foregroundColor(pluginDict[plugin.plugin] == 0 ? Color.white : color)
 			.font(.custom(gridFontName, size: 14, relativeTo: .body))
-		// Set the padding of the displayed sub-folder to 14 if it is the first part of the path, 0 otherwise
-		let paddedText = text.padding(.leading, index == 0 ? 14 : 0)
+		// Set the padding of the displayed sub-folder to 8 if it is the first part of the path, 0 otherwise
+		let paddedText = text.padding(.leading, index == 0 ? 8 : 0)
 		return paddedText
 	}
 
