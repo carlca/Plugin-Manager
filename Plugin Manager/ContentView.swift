@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 
 class TextFieldObserver: ObservableObject {
 	@Published var filterText = ""
@@ -26,6 +25,12 @@ func hexToColor(hex: String) -> Color? {
 	)
 }
 
+struct PluginItem: Identifiable {
+	let manufacturer: String
+	let plugin: String
+	let id = UUID()
+}
+
 struct ContentView: View {
 	@State private var selectedOption = "VST"
 	@State private var plugins: [PluginTriplet<String>] = []
@@ -40,13 +45,13 @@ struct ContentView: View {
 	@State private var lastVisibleRow: Int = 0
 	@State private var scrollRequest: Int = 0
 	@StateObject private var filterObserver = TextFieldObserver()
-		
+	
 	var body: some View {
 		GeometryReader { geometry in
 			VStack {
 				displayTopRowControls()
 				displayColumnHeaders()
-				displayPluginGrid()
+				displayPluginTable()
 			}
 		}
 	}
@@ -129,6 +134,36 @@ struct ContentView: View {
 				}
 				.opacity(0)
 			}
+	}
+	
+	func displayPluginTable() -> some View {
+		return Table(of: PluginTriplet<String>.self) {
+			TableColumn("Manufacturer") { plugin in
+				Text(plugin.manufacturer)
+					.font(.custom(gridFontName, size: 14, relativeTo: .body))
+					.frame(maxWidth: maxManufacturerWidth + 16, alignment: .leading)
+					.background(Color.gray.opacity(0.3))
+			}
+			TableColumn("Plugin") { plugin in
+				Text(plugin.plugin)
+					.font(.custom(gridFontName, size: 14, relativeTo: .body))
+					.frame(maxWidth: maxManufacturerWidth == 0 ? maxManufacturerWidth : .infinity, alignment: .leading)
+					.background(Color.gray.opacity(0.3))
+					.padding(.trailing, 8)
+			}
+			TableColumn("ident") { plugin in
+				Text(plugin.plugin)
+					.font(.custom(gridFontName, size: 14, relativeTo: .body))
+					.frame(maxWidth: 0)
+					.background(Color.gray.opacity(0.0))
+			}
+		} rows: {
+			ForEach(plugins, id: \.self) { plugin in
+				if shouldPluginShow(plugin: plugin) {
+					TableRow(PluginTriplet<String>(manufacturer: plugin.manufacturer, plugin: plugin.plugin, ident: plugin.ident))
+				}
+			}
+		}
 	}
 	
 	func displayPluginGrid() -> some View {

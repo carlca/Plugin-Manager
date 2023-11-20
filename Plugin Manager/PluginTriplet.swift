@@ -1,6 +1,8 @@
-struct PluginTriplet<T: Hashable>: Hashable {
+import SwiftUI
+
+struct PluginTriplet<T: Hashable>: Hashable, Identifiable {
 	var manufacturer: T
 	var plugin: T
 	var ident: T
-	var index: Int?
+	let id = UUID()
 }
